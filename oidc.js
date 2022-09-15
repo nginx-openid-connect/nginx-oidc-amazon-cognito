@@ -13,7 +13,7 @@ var ERR_TOKEN_RES             = 'OIDC AuthZ code sent but token response is not 
 var ERR_X_CLIENT_ID_COOKIE    = 'X-Client-Id should be in cookie';
 var ERR_X_CLIENT_ID_NOT_FOUND = 'X-Client-Id not found in the IdP app';
 var WRN_SESSION               = 'OIDC session is invalid';
-var INF_REFRESH_TOKEN         = 'OIDC refresh success, updating id_token for ';
+var INF_REFRESH_TOKEN         = 'OIDC refresh success, updating tokens for ';
 var INF_REPLACE_TOKEN         = 'OIDC replacing previous refresh token (';
 
 // Flag to check if there is still valid session cookie. It is used by auth()
@@ -31,9 +31,7 @@ export default {
     logout,
     redirectPostLogin,
     redirectPostLogout,
-    testAccessTokenPayload,
-    testExtractToken,
-    testIdTokenPayload,
+    tokenEncoder,
     validateIdToken,
     validateAccessToken,
     validateSession
@@ -210,6 +208,7 @@ function generateCustomEndpoint(r, uri, isEnableCustomPath, paths) {
     var res   = '';
     var key   = '';
     var isKey = false;
+    r.log('### paths: ' + paths)
     var items = JSON.parse(paths);
     for (var i = 0; i < uri.length; i++) {
         switch (uri[i]) {
@@ -391,6 +390,14 @@ function setTokenParams(r) {
     );
 }
 
+// Generate and return token encoder based on token header params.
+function tokenEncoder(r) {
+    if (r.variables.oidc_token_header_params_enable == 1) {
+        return generateCustomHeaders(r, r.variables.oidc_token_header_params)
+    }
+    return "";
+}
+
 // Clear query parameters of the temporary stroage for the NGINX if OIDC's token
 // endpoint returns error.
 function clearTokenParams(r) {
@@ -503,7 +510,9 @@ function getAuthZArgs(r) {
     var redirectURI = r.variables.redirect_base + r.variables.redir_location;
     var authZArgs   = '?response_type=code&scope=' + r.variables.oidc_scopes +
                       '&client_id='                + r.variables.oidc_client + 
-                      '&redirect_uri='             + redirectURI; + 
+                      '&redirect_uri='             + redirectURI + 
+                      // uncomment when to need claims of access token in Auth0.
+                      // '&audience='              + 'https://{{domain}}}/api/v2/' +
                       '&nonce='                    + nonceHash;
     var cookieFlags = r.variables.oidc_cookie_flags;
     r.headersOut['Set-Cookie'] = [
@@ -542,6 +551,16 @@ function generateQueryParams(obj) {
         args += key + '=' + items[key] + '&'
     }
     return args.slice(0, -1)
+}
+
+// Generate custom headers from JSON object
+function generateCustomHeaders(r, obj) {
+    var items = JSON.parse(obj);
+    for (var key in items) {
+        if (key == 'Accept-Encoding') {
+            return items[key]
+        }
+    }
 }
 
 // Generate and return random string.
@@ -714,7 +733,8 @@ function isValidTokenSet(r, tokenset) {
         // The validateIdToken() logs error so that r.error() isn't used.
         return isErr;
     }
-    if (!isValidToken(r, '/_access_token_validation', tokenset.access_token)) {
+    if (r.variables.access_token_validation_enable == 1 &&
+        !isValidToken(r, '/_access_token_validation', tokenset.access_token)) {
         // The validateAccessToken() logs error so that r.error() isn't used.
         return isErr;
     }
@@ -812,63 +832,4 @@ function isValidXClientId(r) {
         }
     }
     return true
-}
-
-// Return JWT header and payload
-function jwt(r, token) {
-    var parts = token.split('.').slice(0,2)
-        .map(v=>Buffer.from(v, 'base64url').toString())
-        .map(JSON.parse);
-    return { 
-        headers: parts[0], 
-        payload: parts[1] 
-    };
-}
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                                                                             *
- *                      3. Common Functions for Testing                        *
- *                                                                             *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-// Test for extracting bearer token from the header of API request.
-function testExtractToken (r) {
-    var msg = `{
-        "message": "This is to show which token is part of proxy header(s) in a server app.",
-        "uri":"` + r.variables.request_uri + `"`;
-    var res = extractToken(r, 'Authorization', true, '/_access_token_validation', msg)
-    if (!res[0]) {
-        return 
-    }
-    msg = res[1]
-
-    var res = extractToken(r, 'x-id-token', false, '/_id_token_validation', msg)
-    if (!res[0]) {
-        return 
-    }
-    msg = res[1]
-
-    var body = msg + '}\n';
-    r.return(200, body);
-}
-
-// Test for extracting sub, subgroups (custom claim) from token
-function testTokenBodyWithCustomClaim(r, token) {
-    var res = jwt(r, token)
-    var msgToken = `"token": "` + token + `"`
-    var msgSub = `"sub": "` + res.payload.sub + `"`
-    var msgSubGroups = `"subgroups": "` + res.payload.subgroups + `"`
-    var body = `{` + msgToken + `,` + msgSub + `,` + msgSubGroups + `}`
-    return body
-}
-
-// Return access token details with custom claim for testing
-function testAccessTokenPayload(r) {
-    r.return(200, testTokenBodyWithCustomClaim(r, r.variables.access_token))
-}
-
-// Return ID token details with custom claim for testing
-function testIdTokenPayload(r) {
-    r.return(200, testTokenBodyWithCustomClaim(r, r.variables.id_token))
 }

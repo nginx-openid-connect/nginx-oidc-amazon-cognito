@@ -202,6 +202,5 @@ COPY  oidc*.conf                      /etc/nginx/conf.d/
 COPY  oidc*.js                        /etc/nginx/conf.d/
 
 # EXPOSE ports, HTTP 80, HTTPS 443 and, Nginx status page 8010
-EXPOSE 80 8010
 STOPSIGNAL SIGTERM
 CMD ["nginx", "-g", "daemon off;"]
