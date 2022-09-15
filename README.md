@@ -1,4 +1,4 @@
-# nginx-oidc-amazon-cognito-v2
+# nginx-oidc-amazon-cognito
 
 Reference implementation of NGINX Plus as relying party for OpenID Connect authentication w/ Amazon Cognito.
 
