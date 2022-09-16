@@ -1,6 +1,6 @@
-# How To Set Up NGINX Dev Portal OIDC for Amazon Cognito Integration
+# How To Set Up NGINX ACM/DevPortal OIDC for Amazon Cognito Integration
 
-Take the following steps to set up NGINX Dev Portal OIDC and test it for Amazon Cognito integration.
+Take the following steps to set up NGINX ACM/DevPortal OIDC and test it for Amazon Cognito integration.
 
 ## 1. Prerequisites
 

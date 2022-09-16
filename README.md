@@ -23,9 +23,9 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 - [Configure NGINX Plus OIDC](./docs/02-NGINX-Plus-Setup.md)
 - [Locally Test an SSO app in a container ](./docs/03-Container-Test.md)
 
-### Option 2. Set up a SSO application via NGINX ACM
+### Option 2. Set up and Test a SSO application via NGINX ACM/DevPortal
 
-- [Configure and test NGINX Dev Portal OIDC](./docs/04-NGINX-DevPortal-Test.md)
+- [Install, configure, and test OIDC via NGINX ACM/DevPortal](./docs/04-NGINX-DevPortal-Test.md)
 
 <br>
 
