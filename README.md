@@ -33,7 +33,7 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 
 - How to ensure that Amazon Cognito correctly set up before configuring your app or NGINX Dev Portal?
 
-  > Take the step of [Option 1. Set up your application via NGINX Plus](#option-1-set-up-your-application-via-nginx-plus) once you set up Amazon Cognito.
+  > Take the step of [Option 1. Set up your application via NGINX Plus](#option-1-set-up-and-test-a-sso-application-via-nginx-plus) once you set up Amazon Cognito.
 
 - How to troubleshoot when PKCE is not working with Amazon Cognito?
 - How to troubleshoot when none-PKCE is not working with Amazon Cognito?
