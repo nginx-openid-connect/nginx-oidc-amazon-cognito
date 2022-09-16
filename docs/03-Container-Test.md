@@ -1,6 +1,8 @@
-# How To Test Containerized NGINX Plus OIDC for Amazon Cognito Integration
+# How To Locally Test Containerized NGINX Plus OIDC for Amazon Cognito Integration
 
 Take the following steps to run NGINX Plus in a Docker container and test OIDC for Amazon Cognito integration.
+
+> Note: You could remotely test in your remote machine if you copy entire files there.
 
 ## 1. Prerequisites
 
