@@ -8,7 +8,8 @@ Take the following steps to create a new application of Amazon Cognito for integ
 
 - [Create a new User Pool](#create-a-new-user-pool)
 - [Create a user](#create-a-user)
-- [Create a new Application](#create-a-new-application)
+- [Create a domain](#create-a-domain)
+- [Create or Edit a new Application](#create-or-edit-a-new-application)
 
 ## Create a new User Pool
 
