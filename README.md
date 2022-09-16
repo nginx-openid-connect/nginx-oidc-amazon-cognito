@@ -23,9 +23,9 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 - [Configure NGINX Plus OIDC](./docs/02-NGINX-Plus-Setup.md)
 - [Locally Test an SSO app in a container ](./docs/03-Container-Test.md)
 
-### Option 2. Set up a SSO application via NGINX ACM
+### Option 2. Set up and Test a SSO application via NGINX ACM/DevPortal
 
-- [Configure and test NGINX Dev Portal OIDC](./docs/04-NGINX-DevPortal-Test.md)
+- [Install, configure, and test OIDC via NGINX ACM/DevPortal](./docs/04-NGINX-DevPortal-Test.md)
 
 <br>
 
@@ -41,7 +41,7 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 - How to troubleshoot when dns server is not responding?
 - How to troubleshoot when logout is not working with Amazon Cognito?
 - How to troubleshoot when `prefered_username` is not shown in Dev Portal UI?
-  > Add additional attributes of `prefered_username` in User pools of Amagon Cognito.
+  > Add additional attributes of `prefered_username` when creating a user pool of Amagon Cognito.
 - How to troubleshoot when a frontend OIDC simulation tool is not working with `X-Client-Id should be in cookie`. when signing-in after signed-out?
 - [Additional troubleshooting information](https://github.com/nginxinc/nginx-openid-connect#troubleshooting)
 
@@ -50,6 +50,7 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 ## 📚 References
 
 - [NGINX OIDC Core v1.0: Forked from NGINX GitHub](https://github.com/nginx-openid-connect/nginx-oidc-core-v1)
-- [NGINX Plus: Single Sign-On With AuAmazon Cognito](https://docs.nginx.com/nginx/deployment-guides/single-sign-on/cognito/)
+- [NGINX OIDC Core v2.0: Forked from NGINX GitHub](https://github.com/nginx-openid-connect/nginx-oidc-core)
+- [NGINX Plus: Single Sign-On With Amazon Cognito](https://docs.nginx.com/nginx/deployment-guides/single-sign-on/cognito/)
 - [NGINX Management Suite](https://docs.nginx.com/nginx-management-suite/)
 - [NGINX API Connectivity Manager](https://docs.nginx.com/nginx-management-suite/acm/)
