@@ -1,24 +1,24 @@
-# How To Set Up NGINX Dev Portal OIDC for Auth0 Integration
+# How To Set Up NGINX Dev Portal OIDC for Amazon Cognito Integration
 
-Take the following steps to set up NGINX Dev Portal OIDC and test it for Auth0 integration.
+Take the following steps to set up NGINX Dev Portal OIDC and test it for Amazon Cognito integration.
 
 ## 1. Prerequisites
 
-- [**Set up Auth0**](./01-Auth0-Setup.md)
+- [**Set up Amazon Cognito**](./01-IdP-Setup.md)
 
   Ensure that you use **different application and callback/logout URLs** as the following example unlike that are already created to test your [containerized NGINX Plus](./02-NGINX-Plus-Setup.md).
 
-  | Category              | Example                                      |
-  | --------------------- | -------------------------------------------- |
-  | Application Name      | `nginx-devportal-app`                        |
-  | Allowed Callback URLs | `http://nginx.devportal.auth0.test/_codexch` |
-  | Allowed Logout URLs   | `http://nginx.devportal.auth0.test/_logout`  |
+  | Category              | Example                                        |
+  | --------------------- | ---------------------------------------------- |
+  | Application Name      | `nginx-devportal-app`                          |
+  | Allowed Callback URLs | `http://nginx.devportal.cognito.test/_codexch` |
+  | Allowed Logout URLs   | `http://nginx.devportal.cognito.test/_logout`  |
 
 - Edit `hosts` file in your laptop via if you want to locally test your app:
 
   ```bash
   $ sudo vi /etc/hosts
-  127.0.0.1 nginx.devportal.auth0.test
+  127.0.0.1 nginx.devportal.cognito.test
   ```
 
 ## 2. Install NGINX API Connectivity Manager
@@ -33,7 +33,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
 
 > **Note**:
 >
-> [Download an example of postman collection](./ACM-DevPortal-OIDC.postman_collection.json) for easily testing the following steps.
+> [Download an example of postman collection](./ACM-DevPortal-OIDC-for-Amazon-Cognito.postman_collection.json) for easily testing the following steps.
 
 - Open a Postman collection, and edit ACM password and variables:
   ![](./img/postman-auth.png)
@@ -82,11 +82,11 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >         "oidc-authz": [
   >           {
   >             "action": {
-  >               "jwksURI": "https://{{auth0Domain}}/.well-known/jwks.json",
-  >               "tokenEndpoint": "https://{{auth0Domain}}/oauth/token",
-  >               "userInfoEndpoint": "https://{{auth0Domain}}/userinfo",
-  >               "authorizationEndpoint": "https://{{auth0Host}}/authorize",
-  >               "logOffEndpoint": "https://{{auth0Domain}}/v2/logout",
+  >               "jwksURI": "https://cognito-idp.{{idpRegion}}.amazonaws.com/{{idpUserPoolId}}/.well-known/jwks.json",
+  >               "tokenEndpoint": "https://{{idpDomain}}/oauth2/token",
+  >               "userInfoEndpoint": "https://{{idpDomain}}/oauth2/userInfo",
+  >               "authorizationEndpoint": "https://{{auth0Host}}/oauth2/authorize",
+  >               "logOffEndpoint": "https://{{idpDomain}}/logout",
   >               "logOutParams": [
   >                 {
   >                   "paramType": "QUERY",
@@ -111,7 +111,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >               {
   >                 "clientID": "{{clientId}}",
   >                 "clientSecret": "{{clientSecret}}",
-  >                 "scopes": "openid+profile+email+offline_access"
+  >                 "scopes": "openid+profile+email"
   >               }
   >             ]
   >           }
@@ -171,9 +171,9 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >           {
   >             "action": {
   >               "authFlowType": "AUTHCODE",
-  >               "authorizationEndpoint": "https://{{auth0Domain}}/authorize",
-  >               "jwksURI": "https://{{auth0Domain}}/.well-known/jwks.json",
-  >               "logOffEndpoint": "https://{{auth0Domain}}/v2/logout",
+  >               "authorizationEndpoint": "https://{{auth0Host}}/oauth2/authorize",
+  >               "jwksURI": "https://cognito-idp.{{idpRegion}}.amazonaws.com/{{idpUserPoolId}}/.well-known/jwks.json",
+  >               "logOffEndpoint": "https://{{idpDomain}}/logout",
   >               "logOutParams": [
   >                 {
   >                   "key": "returnTo",
@@ -186,7 +186,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >                   "value": "{{clientId}}"
   >                 }
   >               ],
-  >               "tokenEndpoint": "https://{{auth0Domain}}/oauth/token",
+  >               "tokenEndpoint": "https://{{idpDomain}}/oauth2/token",
   >               "tokenParams": [
   >                 {
   >                   "key": "Accept-Encoding",
@@ -200,14 +200,14 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >                 "redirectURI": "/_codexch",
   >                 "userInfoURI": "/userinfo"
   >               },
-  >               "userInfoEndpoint": "https://{{auth0Domain}}/userinfo"
+  >               "userInfoEndpoint": "https://{{idpDomain}}/oauth2/userInfo"
   >             },
   >             "data": [
   >               {
   >                 "appName": "nginx-devportal-app",
   >                 "clientID": "{{clientId}}",
   >                 "clientSecret": "{{clientSecret}}",
-  >                 "scopes": "openid+profile+email+offline_access",
+  >                 "scopes": "openid+profile+email",
   >                 "source": "ACM"
   >               }
   >             ]
@@ -237,6 +237,6 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
 
 ## 3. Test Dev Portal OIDC with Auth0
 
-- Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.auth0.test`.
+- Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.cognito.test`.
 - Try `Login` and `Logout`.
 - Test the above TWO steps after changing IdP (PKCE option) and updating Dev Portal via NGINX ACM API.
