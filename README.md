@@ -2,7 +2,7 @@
 
 Reference implementation of NGINX Plus as relying party for OpenID Connect authentication w/ Amazon Cognito.
 
-This repo provides the information of how to set up Amazon Cognito, integrate with NGINX Plus, and test using a containerized NGINX Plus app, a frontend OIDC simulation tool, and a NGINX Dev Portal.
+This repo provides the information of how to set up Amazon Cognito, integrate with NGINX Plus, and locally test using a containerized NGINX Plus app, a frontend OIDC simulation tool, and a NGINX Dev Portal.
 
 ![](./docs/img/nginx-oidc-workflow.png)
 
@@ -18,10 +18,10 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 
 - [Create and configure an app in Amazon Cognito](./docs/01-IdP-Setup.md)
 
-### Option 1. Directly set up a SSO application via NGINX Plus
+### Option 1. Set up and Test a SSO application via NGINX Plus
 
 - [Configure NGINX Plus OIDC](./docs/02-NGINX-Plus-Setup.md)
-- [Test an SSO app in a container ](./docs/03-Container-Test.md)
+- [Locally Test an SSO app in a container ](./docs/03-Container-Test.md)
 
 ### Option 2. Set up a SSO application via NGINX ACM
 

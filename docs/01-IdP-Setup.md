@@ -1,108 +1,134 @@
 # How To Configure Amazon Cognito for NGINX Plus OIDC Integration
 
-Take the following steps to create a new application for NGINX Plus.
+Take the following steps to create a new application of Amazon Cognito for integrating with NGINX Plus.
 
 > **Note:**
 >
 > The following procedure reflects the Cognito GUI at the time of publication, but the GUI is subject to change. Use this guide as a reference and adapt to the current Cognito GUI as necessary.
 
-## Create a new Auth0 Application
+- [Create a new User Pool](#create-a-new-user-pool)
+- [Create a user](#create-a-user)
+- [Create a new Application](#create-a-new-application)
 
-1. Log in to your AWS account, open the [AWS Management Console](https://console.aws.amazon.com), and navigate to the Cognito dashboard (you can, for example, click Cognito in the Security, Identity, & Compliance section of the Services drop‑down menu).
+## Create a new User Pool
 
-2. Select **Applications > Applications** from the sidebar menu.
+1. Log in to your AWS account, open the [AWS Management Console](https://console.aws.amazon.com), and navigate to the Cognito dashboard (you can, for example, click **`Cognito`** in the **Security, Identity, & Compliance** section of the **Services** drop‑down menu).
 
-3. On the **Applications** page, select the **Create Application** button.
+2. On the Cognito dashboard, click **Manage User Pools** to open the **Your User Pools** window. Click the **`Create a user pool`**  button or the highlighted phrase.
+   ![](./img/cognito-user-pools.png)
 
-4. In the **Create application** window, provide the information listed below and then select **Create**.
-   - **Name**: A name for the application, for example “nginx-plus-app”.
-   - **Application Type**: **Regular Web Applications**
-     ![](./img/sso-auth0-create-app.png)
+3. Configure **sign-in experience** as the following example:
+   ![](./img/cognito-user-pool-step-01-sign-in.png)
 
-## Set up the Web Application
+4. Configure **security requirements** as the following example:
 
-In this section, you wll set up a web application that follows the [Auth0 Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow).
+   > Note: Select `No MFA` for your quick testing. Otherwise configure multi-factor authentication.
 
-1. On the **Application** page in the [Auth0 dashboard](https://manage.auth0.com/), select your web application.
+   ![](./img/cognito-user-pool-step-02-security.png)
 
-2. Select the **Settings** tab for your application.
+5. Configure **sign-up experience** as the following example:
 
-3. Make note of the Client ID and Client Secret displayed in the **Basic Information** section.
-   ![](./img/sso-auth0-app.png)
+   > Note: select additional required attributes such as `preferred_username` because it is used for **NGINX Dev Portal**.
 
-4. In the **Application Properties** section, choose one of options from the combo box in the **Token Endpoint Authentication Method** field.
+   ![](./img/cognito-user-pool-step-03-sign-up.png)
 
-   - Option 1. Choose **Post** if you don't enable **PKCE**.
-     ![](./img/token-method-post.png)
+6. Configure **message delivery** as the following example:
+   ![](./img/cognito-user-pool-step-04-message-delivery.png)
 
-   - Option 2. Choose **None** if you enable **PKCE**.
-     ![](./img/token-method-none.png)
+7. **Integrate your app** as the following example:
 
-5. In the **Application URIs** section, provide the URI of the NGINX Plus instance in the fields of **Allowed Callback URLs** and **Allowed Logout URLs**.
+   > Note: You can create your app either in this step or [after creating](#create-a-new-application) a user pool.
 
-   - **Allowed Callback URLs**: The URL must include the port number and end in **/\_codexch**. In our example, we used the URL `http://nginx.auth0.test:443/_codexch`.
+   ![](./img/cognito-user-pool-step-05-integrate-app.png)
 
-   - **Allowed Logout URLs**: The URL must include the port number and end in **/\_codexch**. In our example, we used the URL `http://nginx.auth0.test:443/_logout`.
+   - Option 1. Check `Generate a client secret` if you want to **disable PKCE**
 
-   > **Note:**
-   >
-   > - The port is always required, even if you use the default port for HTTP (80) or HTTPS (443).
-   > - The use of SSL/TLS (443) is strongly recommended for production environments.
-   > - You don't need to include the port number if it is either 80 or 443 if you use **NGINX-ACM > 1.1.1**.
+   - Option 2. Check `Don't generate a client secret` if you want to **enable PKCE**
+     ![](./img/cognito-user-pool-step-05-initial-app-client.png)
 
-   ![](./img/application-uris.png)
+8. Review and create a user pool:
 
-6. In the **Advanced Settings** section, select the **OAuth** tab.
+   ![](./img/cognito-user-pool-step-06-review-and-create.png)
 
-   - Option 1. Choose **RS256** if you don't enable **PKCE**.
-     ![](./img/oauth-json-Rs256.png)
+9. Click **`Create user pool`** button:
 
-   - Option 2. Choose **HS256** if you enable **PKCE**.
-     ![](./img/oauth-json-hs256.png)
+   ![](./img/cognito-user-pool-step-06-create-button.png)
 
-7. In the **Advanced Settings** section, select the **Grant Types** tab.
+## Create a user
 
-   - Option 1. Choose **Authorization Code, Refresn Token, Client Credentials, Password** if you don't enable **PKCE**.
-     ![](./img/grant-types-none-pkce.png)
+1. Select a user pool (`nginx-oidc-user-pool`) that you created:
 
-   - Option 2. Choose **Authorization Code, Refresn Token, Password** if you enable **PKCE**.
-     ![](./img/grant-types-pkce.png)
+   ![](./img/cognito-user-pool-step-07-created.png)
 
-8. In the **Advanced Settings** section, select the **Endpoints** tab.
+2. In the tab of Users, click `Create user` button:
 
-9. Make note of the **OpenID Configuration** URL.
-   ![](./img/sso-auth0-oidc-configurations.png)
+   ![](./img/cognito-users-01-create.png)
 
-10. Select **Save Changes**.
+3. Add a user name that you want to create:
 
-## Set up Authentication
+   > Note: Select `Don't send an invitation` for your quick testing to create dummy email address.
 
-> **Note:**
-> For the purposes of this guide, we will add a new Auth0 user database and user account to use for testing.
->
-> You can set up authentication using any of the available [Auth0 identity providers](https://auth0.com/docs/authenticate/identity-providers).
+   ![](./img/cognito-users-02-create.png)
 
-To set up a new user database and add a user account to it, take the steps below.
+## Create a domain
 
-1. Log in to the [Auth0 dashboard](https://manage.auth0.com/) and select **Authentication > Database** from the sidebar menu.
+1. Select a **Create Cognito domain** in the list after selecting the tab of **App Integration**:
 
-2. Select the **Create DB Connection** button.
+   ![](./img/cognito-app-integration-01-domain.png)
 
-3. Provide a **Name** for the database connection, then select **Create**.
+2. Type a domain prefix in the **Domain prefix** field under **Cognito domain** (in this guide, `my-nginx-plus-oidc`). Click the **`Create Cognito domain`** button:
 
-4. On the **Database** page, select the **Applications** tab. Then, select the toggle button next to the [application you created earlier](#create-a-new-auth0-application).
-   ![](./img/sso-auth0-db-app.png)
+   ![](./img/cognito-app-integration-02-domain.png)
 
-5. In the sidebar menu, select **User Management > Users**.
+3. Check if your domain is created:
+   ![](./img/cognito-app-integration-03-domain.png)
 
-6. On the **Users** page, select the **Create User** button.
+## Create or Edit a new Application
 
-7. In the **Create user** window, provide the following information, then select **Create**.
+1. Select the tab of **App Integration** in the user pool:
 
-   - **Email**: user’s email
-   - **Password**: a password for the user account
-   - **Connection**: select your **database** from the list.
+   ![](./img/cognito-app-integration-tab.png)
 
-   ![](./img/sso-auth0-create-user.png)
+2. Scroll down from the tab of **App integration**, and select **Create app client** button
 
-The user should receive an email to the email address provided. Once the user verifies their account by clicking on the link in the email, the account creation process is complete.
+   ![](./img/cognito-app-client-create-button.png)
+
+3. Enter a name of app (in this guide, `nginx-oidc-app` for **non-PKCE**, `nginx-odic-app-pkce` for **PKCE**) in the **App client name** field. Make sure that you choose one of the following options.
+
+   - Option 1. Check `Generate a client secret` if you want to **disable PKCE**
+     ![](./img/cognito-app-client-non-pkce-01.png)
+
+   - Option 2. Check `Don't generate a client secret` if you want to **enable PKCE**
+     ![](./img/cognito-user-pool-step-05-initial-app-client.png)
+
+4. Find **Hosted UI settings** after scrolling down, and perform the following steps:
+
+   ![](./img/cognito-app-client-host-UI-settings.png)
+
+   - 4.1 In the sections of **Allowed callback URLs** and **Allowed sign-out URLs**, type the URI of the NGINX Plus instance including the port number, and ending in **`/_codexch`** for callback URL and **`/_logout`** for sign-out URL as follows.
+
+     - **Allowed callback URLs**: `https://nginx.cognito.test:443/_codexch`.
+     - **Allowed sign-out URLs**: `https://nginx.cognito.test:443/_logout`.
+
+     > **Notes:**
+     >
+     > - For production, we strongly recommend that you use SSL/TLS (port 443).
+     > - The port number is mandatory even when you’re using the default port for HTTP (80) or HTTPS (443). But it it isn't needed if you use NGINX ACM.
+
+   - 4.2 In the **OAuth 2.0 grant types** section, click the **Authorization code grant** checkbox.
+
+   - 4.3 In the **OpenID Connect scopes**, click the **email, openid**, and **profile** checkboxes.
+
+   - 4.4 Click the **`Save changes`** button.
+
+5. Check the **App client list** in the tab of **App integration** under the user pool of **nginx-oidc-user-pool** to see TWO applications (#1 for non-PKCE, #2 for PKCE) are created.
+
+   ![](./img/cognito-app-client-list.png)
+
+6. Click one of app clients to note **Client ID** and **Client secret** for configuring NGINX Plus.
+
+   - Option 1. Copy and note **Client ID** and **Client secret** for non-PKCE application.
+     ![](./img/cognito-app-details-non-pkce.png)
+
+   - Option 2. Copy and note only **Client ID** for PKCE application.
+     ![](./img/cognito-app-details-pkce.png)
