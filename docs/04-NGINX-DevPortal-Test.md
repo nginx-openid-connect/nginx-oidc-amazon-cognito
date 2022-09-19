@@ -85,7 +85,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >               "jwksURI": "https://cognito-idp.{{idpRegion}}.amazonaws.com/{{idpUserPoolId}}/.well-known/jwks.json",
   >               "tokenEndpoint": "https://{{idpDomain}}/oauth2/token",
   >               "userInfoEndpoint": "https://{{idpDomain}}/oauth2/userInfo",
-  >               "authorizationEndpoint": "https://{{auth0Host}}/oauth2/authorize",
+  >               "authorizationEndpoint": "https://{{idpDomain}}/oauth2/authorize",
   >               "logOffEndpoint": "https://{{idpDomain}}/logout",
   >               "logOutParams": [
   >                 {
@@ -171,7 +171,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >           {
   >             "action": {
   >               "authFlowType": "AUTHCODE",
-  >               "authorizationEndpoint": "https://{{auth0Host}}/oauth2/authorize",
+  >               "authorizationEndpoint": "https://{{idpDomain}}/oauth2/authorize",
   >               "jwksURI": "https://cognito-idp.{{idpRegion}}.amazonaws.com/{{idpUserPoolId}}/.well-known/jwks.json",
   >               "logOffEndpoint": "https://{{idpDomain}}/logout",
   >               "logOutParams": [
@@ -235,7 +235,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   > }
   > ```
 
-## 3. Test Dev Portal OIDC with Auth0
+## 3. Test Dev Portal OIDC with Amazon Cognito
 
 - Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.cognito.test`.
 - Try `Login` and `Logout`.
