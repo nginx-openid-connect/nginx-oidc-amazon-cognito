@@ -47,7 +47,11 @@ Take the following steps to run NGINX Plus in a Docker container and test OIDC f
 
   Enter your name and password which are registered in Amazon Cognito.
 
-  ![](./img/login-cognito.png)
+  ![](./img/signIn-cognito.png)
+  
+  When you login first time you will be prompted to update your password which you can update by entering below fields and clicking 'Send' button. 
+  
+  ![](./img/changePassword-cognito.png)
 
   You will see the following screen once you are successfully signed-in.
 
