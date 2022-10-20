@@ -174,6 +174,10 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   curl -k https://<CTRL-FQDN>/install/nginx-agent > install.sh && sudo sh install.sh -g devp-group && sudo systemctl start nginx-agent
   ```
 
+- Delete an environment of `Dev Portal`:
+
+  > `DELETE https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments/{{environmentname}}`
+
 ## 3. Test Dev Portal OIDC with Amazon Cognito
 
 - Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.cognito.test`.
