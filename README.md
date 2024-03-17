@@ -37,9 +37,7 @@ This repo provides the information of how to set up Amazon Cognito, integrate wi
 <br>
 
 ## 📚 References
-
-- [NGINX OIDC Core v1.0: Forked from NGINX GitHub](https://github.com/nginx-openid-connect/nginx-oidc-core-v1)
-- [NGINX OIDC Core v2.0: Forked from NGINX GitHub](https://github.com/nginx-openid-connect/nginx-oidc-core)
+- [OpenID Connect Standard Spec](https://openid.net/specs/openid-connect-core-1_0.html)
 - [NGINX Plus: Single Sign-On With Amazon Cognito](https://docs.nginx.com/nginx/deployment-guides/single-sign-on/cognito/)
 - [NGINX Management Suite](https://docs.nginx.com/nginx-management-suite/)
 - [NGINX API Connectivity Manager](https://docs.nginx.com/nginx-management-suite/acm/)
